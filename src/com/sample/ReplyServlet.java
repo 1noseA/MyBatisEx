@@ -48,15 +48,21 @@ public class ReplyServlet extends HttpServlet {
 			reply = new ArrayList<>();
 		}
 
+		int comId = Integer.parseInt(request.getParameter("comId"));
+		int repId = 0;
+		for (Reply rep : reply) {
+			if (rep.getComId() == comId) {
+				repId++;
+			}
+		}
 		String repName = request.getParameter("repName");
 		String repContent = request.getParameter("repContent");
-		int comId = Integer.parseInt(request.getParameter("comId"));
 
-		Reply rep = new Reply(new Date(), repName, repContent, comId);
+		Reply rep = new Reply(comId, repId + 1, new Date(), repName, repContent);
 
 		reply.add(rep);
 		session.setAttribute("reply", reply);
-		// session.setAttribute("comId", comId);
+		session.setAttribute("repId", repId + 1);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);

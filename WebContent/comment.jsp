@@ -55,7 +55,7 @@
 	<div class="comment-lists">
 		<c:forEach items="${ sessionScope.list }" var="com">
 			<div class="com-list">
-				<span><c:out value="${ com.id }" />：</span>
+				<span>コメント<c:out value="${ com.id }" />：</span>
 				<fmt:formatDate value="${ com.date }" />
 				<span>★<c:out value="${ com.name }" />さん★</span>
 				<br>
@@ -66,10 +66,9 @@
 					<div class="reply-lists">
 						<c:forEach items="${ sessionScope.reply }" var="rep">
 							<c:if test="${ com.id == rep.comId }">
-								<%-- <c:set value="${ count +1 }" var="count"></c:set> --%>
 								<hr width="100%">
 								<div class="rep-list">
-									<%-- <c:out value="${ count }" />： --%>
+									<span>返信<c:out value="${ rep.repId }" />：</span>
 									<fmt:formatDate value="${ rep.repDate }" />
 									<span><c:out value="${ rep.repName }" />より</span>
 									<br>

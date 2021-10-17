@@ -8,7 +8,6 @@ public class Comment {
 	private Date date;
 	private String name;
 	private String content;
-	// private List<Reply> reply;
 
 	public Comment(int id, Date date, String name, String content) {
 		super();
@@ -22,16 +21,32 @@ public class Comment {
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public Date getDate() {
 		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getContent() {
 		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }
