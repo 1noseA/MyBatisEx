@@ -10,14 +10,14 @@ public class Reply {
 	private String repName;
 	private String repContent;
 
-	public Reply(int comId, int repId, Date repDate, String repName, String repContent) {
-		super();
-		this.comId = comId;
-		this.repId = repId;
-		this.repDate = repDate;
-		this.repName = repName;
-		this.repContent = repContent;
-	}
+//	public Reply(int comId, int repId, Date repDate, String repName, String repContent) {
+//		super();
+//		this.comId = comId;
+//		this.repId = repId;
+//		this.repDate = repDate;
+//		this.repName = repName;
+//		this.repContent = repContent;
+//	}
 
 	public int getComId() {
 		return comId;

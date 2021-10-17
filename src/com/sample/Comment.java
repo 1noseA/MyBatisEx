@@ -9,13 +9,13 @@ public class Comment {
 	private String name;
 	private String content;
 
-	public Comment(int id, Date date, String name, String content) {
-		super();
-		this.id = id;
-		this.date = date;
-		this.name = name;
-		this.content = content;
-	}
+//	public Comment(int id, Date date, String name, String content) {
+//		super();
+//		this.id = id;
+//		this.date = date;
+//		this.name = name;
+//		this.content = content;
+//	}
 
 	public int getId() {
 		return id;
