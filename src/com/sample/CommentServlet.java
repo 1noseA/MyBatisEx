@@ -1,9 +1,8 @@
 package com.sample;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class PostServlet
@@ -41,26 +39,19 @@ public class CommentServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		HttpSession session = request.getSession();
-		List<Comment> list = (List<Comment>) session.getAttribute("list");
+		CommentDao dao = new CommentDao();
+		Comment com = new Comment();
+		// com.setId(id);
+		com.setDate(new Date());
+		com.setName(request.getParameter("name"));
+		com.setContent(request.getParameter("content"));
 
-		if (list == null) {
-			list = new ArrayList<>();
+		try {
+			dao.insert(com);
+		} catch (SQLException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
 		}
-
-		Integer id = (Integer)session.getAttribute("id");
-		if(id == null) {
-			id = 0;
-		}
-
-		String name = request.getParameter("name");
-		String content = request.getParameter("content");
-
-		Comment com = new Comment(id + 1, new Date(), name, content);
-
-		list.add(com);
-		session.setAttribute("list", list);
-		session.setAttribute("id", id + 1);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);
