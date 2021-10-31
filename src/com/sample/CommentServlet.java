@@ -2,7 +2,9 @@ package com.sample;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,6 +43,18 @@ public class CommentServlet extends HttpServlet {
 
 		CommentDao dao = new CommentDao();
 		Comment com = new Comment();
+
+		try {
+			List<Comment> list = dao.findAllComment();
+			if (list == null) {
+				list = new ArrayList<>();
+				com.setId(1);
+			}
+		} catch (SQLException e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
+		}
+
 		// com.setId(id);
 		com.setDate(new Date());
 		com.setName(request.getParameter("name"));

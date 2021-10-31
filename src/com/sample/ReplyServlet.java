@@ -1,6 +1,7 @@
 package com.sample;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class ReplyServlet
@@ -41,28 +41,38 @@ public class ReplyServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		HttpSession session = request.getSession();
-		List<Reply> reply = (List<Reply>) session.getAttribute("reply");
-
-		if (reply == null) {
-			reply = new ArrayList<>();
-		}
+		ReplyDao dao = new ReplyDao();
+		Reply rep = new Reply();
 
 		int comId = Integer.parseInt(request.getParameter("comId"));
-		int repId = 0;
-		for (Reply rep : reply) {
-			if (rep.getComId() == comId) {
-				repId++;
+
+		try {
+			List<Reply> reply = dao.findAllReply(comId);
+			if (reply == null) {
+				reply = new ArrayList<>();
 			}
+			int repId = 0;
+			for (Reply r : reply) {
+				if (r.getComId() == comId) {
+					repId++;
+				}
+			}
+		} catch (SQLException e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
 		}
-		String repName = request.getParameter("repName");
-		String repContent = request.getParameter("repContent");
 
-		Reply rep = new Reply(comId, repId + 1, new Date(), repName, repContent);
+		rep.setComId(comId);
+		rep.setRepDate(new Date());
+		rep.setRepName(request.getParameter("repName"));
+		rep.setRepContent(request.getParameter("repContent"));
 
-		reply.add(rep);
-		session.setAttribute("reply", reply);
-		session.setAttribute("repId", repId + 1);
+		try {
+			dao.insert(rep);
+		} catch (SQLException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);

@@ -53,7 +53,7 @@
 	<h2>● お客さまからのコメント ●</h2>
 	<!-- コメント表示 -->
 	<div class="comment-lists">
-		<c:forEach items="${ sessionScope.list }" var="com">
+		<c:forEach items="${ list }" var="com">
 			<div class="com-list">
 				<span>コメント<c:out value="${ com.id }" />：</span>
 				<fmt:formatDate value="${ com.date }" />
@@ -61,10 +61,10 @@
 				<br>
 				<span><c:out value="${ com.content }" /></span>
 				<br>
-				<c:if test="${ sessionScope.reply != null }">
+				<c:if test="${ reply != null }">
 					<!-- 返信表示 -->
 					<div class="reply-lists">
-						<c:forEach items="${ sessionScope.reply }" var="rep">
+						<c:forEach items="${ reply }" var="rep">
 							<c:if test="${ com.id == rep.comId }">
 								<hr width="100%">
 								<div class="rep-list">

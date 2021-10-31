@@ -12,55 +12,57 @@ import java.util.List;
 public class ReplyDao {
 
 	// INSERT
-		private static void insert(Reply rep) throws SQLException {
+	public static void insert(Reply rep) throws SQLException {
 
-			String url = "jdbc:mysql://localhost:3306/grape";
-			String user = "root";
-			String password = "password";
+		String url = "jdbc:mysql://localhost:3306/grape";
+		String user = "root";
+		String password = "password";
 
-			Connection con = DriverManager.getConnection(url, user, password);
+		Connection con = DriverManager.getConnection(url, user, password);
 
-			PreparedStatement ps = con.prepareStatement("insert into employee values(?, ?, ?, ?, ?)");
-			ps.setInt(1, rep.getComId());
-			ps.setInt(2, rep.getRepId());
-			ps.setDate(3, new Date(rep.getRepDate().getTime()));
-			ps.setString(4, rep.getRepName());
-			ps.setString(4, rep.getRepContent());
+		PreparedStatement ps = con.prepareStatement("insert into employee values(?, last_insert_id() + 1, ?, ?, ?)");
+		ps.setInt(1, rep.getComId());
+		// ps.setInt(2, rep.getRepId());
+		ps.setDate(2, new Date(rep.getRepDate().getTime()));
+		ps.setString(3, rep.getRepName());
+		ps.setString(4, rep.getRepContent());
 
-			ps.execute();
+		ps.execute();
 
-		}
+		con.close();
 
-		// SELECT
-		private static List<Reply> allReply(int comId) throws SQLException {
+	}
 
-			String url = "jdbc:mysql://localhost:3306/grape";
-			String user = "root";
-			String password = "password";
+	// SELECT（一覧表示）
+	public static List<Reply> findAllReply(int comId) throws SQLException {
 
-			Connection con = DriverManager.getConnection(url, user, password);
+		String url = "jdbc:mysql://localhost:3306/grape";
+		String user = "root";
+		String password = "password";
 
-			PreparedStatement ps = con.prepareStatement("select * from reply where comId = ?");
-			ResultSet rs = ps.executeQuery();
+		Connection con = DriverManager.getConnection(url, user, password);
 
-			List<Reply> list = new ArrayList<>();
+		PreparedStatement ps = con.prepareStatement("select * from reply where comId = ?");
+		ResultSet rs = ps.executeQuery();
 
-			try {
-				while (rs.next()) {
-					Reply rep = new Reply();
-					rep.setComId(rs.getInt("comId"));
-					rep.setRepId(rs.getInt("repId"));
-					rep.setRepDate(rs.getDate("repDate"));
-					rep.setRepName(rs.getString("repName"));
-					rep.setRepContent(rs.getString("repContent"));
-					list.add(rep);
-				}
-			} finally {
-				con.close();
+		List<Reply> list = new ArrayList<>();
+
+		try {
+			while (rs.next()) {
+				Reply rep = new Reply();
+				rep.setComId(rs.getInt("comId"));
+				rep.setRepId(rs.getInt("repId"));
+				rep.setRepDate(rs.getDate("repDate"));
+				rep.setRepName(rs.getString("repName"));
+				rep.setRepContent(rs.getString("repContent"));
+				list.add(rep);
 			}
-
-			return list;
-
+		} finally {
+			con.close();
 		}
+
+		return list;
+
+	}
 
 }
