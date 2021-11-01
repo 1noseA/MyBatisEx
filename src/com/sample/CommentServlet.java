@@ -46,25 +46,24 @@ public class CommentServlet extends HttpServlet {
 
 		try {
 			List<Comment> list = dao.findAllComment();
+			// もしリストがなかったらリストをnewしてIDに1を入れる
 			if (list == null) {
 				list = new ArrayList<>();
 				com.setId(1);
+			} else {
+				// リストがあれば、最後のIDを取得する
+				int id = list.get(list.size() - 1).getId();
+				// +1したIDをセットする
+				com.setId(id + 1);
 			}
 		} catch (SQLException e1) {
 			// TODO 自動生成された catch ブロック
 			e1.printStackTrace();
 		}
 
-		try {
-			int id = dao.findMaxId();
-			com.setId(id + 1);
-			com.setDate(new Date());
-			com.setName(request.getParameter("name"));
-			com.setContent(request.getParameter("content"));
-		} catch (SQLException e1) {
-			// TODO 自動生成された catch ブロック
-			e1.printStackTrace();
-		}
+		com.setDate(new Date());
+		com.setName(request.getParameter("name"));
+		com.setContent(request.getParameter("content"));
 
 		try {
 			dao.insert(com);
