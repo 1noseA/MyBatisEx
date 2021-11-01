@@ -14,13 +14,13 @@ public class CommentDao {
 	// INSERT
 	public static void insert(Comment com) throws SQLException {
 
-		String url = "jdbc:mysql://localhost:3306/grape";
+		String url = "jdbc:mysql://localhost:3306/exercise";
 		String user = "root";
 		String password = "password";
 
 		Connection con = DriverManager.getConnection(url, user, password);
 
-		PreparedStatement ps = con.prepareStatement("insert into employee values(last_insert_id() + 1, ?, ?, ?)");
+		PreparedStatement ps = con.prepareStatement("insert into comment values(last_insert_id() + 1, ?, ?, ?)");
 //		ResultSet rs = ps.getGeneratedKeys();
 //		int autoId = 0;
 //		if(rs.next()){
@@ -40,9 +40,16 @@ public class CommentDao {
 	// SELECT（一覧取得）
 	public static List<Comment> findAllComment() throws SQLException {
 
-		String url = "jdbc:mysql://localhost:3306/grape";
+		String url = "jdbc:mysql://localhost:3306/exercise";
 		String user = "root";
 		String password = "password";
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 
 		Connection con = DriverManager.getConnection(url, user, password);
 

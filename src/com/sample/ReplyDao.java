@@ -14,13 +14,13 @@ public class ReplyDao {
 	// INSERT
 	public static void insert(Reply rep) throws SQLException {
 
-		String url = "jdbc:mysql://localhost:3306/grape";
+		String url = "jdbc:mysql://localhost:3306/exercise";
 		String user = "root";
 		String password = "password";
 
 		Connection con = DriverManager.getConnection(url, user, password);
 
-		PreparedStatement ps = con.prepareStatement("insert into employee values(?, last_insert_id() + 1, ?, ?, ?)");
+		PreparedStatement ps = con.prepareStatement("insert into reply values(?, last_insert_id() + 1, ?, ?, ?)");
 		ps.setInt(1, rep.getComId());
 		// ps.setInt(2, rep.getRepId());
 		ps.setDate(2, new Date(rep.getRepDate().getTime()));
@@ -36,7 +36,7 @@ public class ReplyDao {
 	// SELECT（一覧表示）
 	public static List<Reply> findAllReply(int comId) throws SQLException {
 
-		String url = "jdbc:mysql://localhost:3306/grape";
+		String url = "jdbc:mysql://localhost:3306/exercise";
 		String user = "root";
 		String password = "password";
 
