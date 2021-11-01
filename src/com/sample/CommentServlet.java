@@ -33,22 +33,6 @@ public class CommentServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		CommentDao dao = new CommentDao();
-
-		List<Comment> list = new ArrayList<>();
-		try {
-			list = dao.findAllComment();
-		} catch (SQLException e1) {
-			// TODO 自動生成された catch ブロック
-			e1.printStackTrace();
-		}
-
-		request.setAttribute("list", list);
-
-		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
-		rd.forward(request, response);
-		return;
-
 	}
 
 	/**
@@ -87,6 +71,7 @@ public class CommentServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
+		list.add(com);
 		request.setAttribute("list", list);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");

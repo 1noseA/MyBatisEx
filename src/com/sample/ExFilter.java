@@ -1,10 +1,14 @@
 package com.sample;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -42,6 +46,23 @@ public class ExFilter implements Filter {
 	    response.setCharacterEncoding("UTF-8");
 	    // ここでそれらを繋げる
 	    chain.doFilter(request, response);
+
+	    // コメント全件取得
+	    CommentDao dao = new CommentDao();
+
+		List<Comment> list = new ArrayList<>();
+		try {
+			list = dao.findAllComment();
+		} catch (SQLException e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
+		}
+
+		request.setAttribute("list", list);
+
+		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
+		rd.forward(request, response);
+		return;
 	}
 
 	/**
