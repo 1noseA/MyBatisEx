@@ -32,8 +32,23 @@ public class CommentServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+
+		CommentDao dao = new CommentDao();
+
+		List<Comment> list = new ArrayList<>();
+		try {
+			list = dao.findAllComment();
+		} catch (SQLException e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
+		}
+
+		request.setAttribute("list", list);
+
+		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
+		rd.forward(request, response);
+		return;
+
 	}
 
 	/**
@@ -44,11 +59,11 @@ public class CommentServlet extends HttpServlet {
 		CommentDao dao = new CommentDao();
 		Comment com = new Comment();
 
+		List<Comment> list = new ArrayList<>();
 		try {
-			List<Comment> list = dao.findAllComment();
+			list = dao.findAllComment();
 			// もしリストがなかったらリストをnewしてIDに1を入れる
-			if (list == null) {
-				list = new ArrayList<>();
+			if (list.size() == 0) {
 				com.setId(1);
 			} else {
 				// リストがあれば、最後のIDを取得する
@@ -71,6 +86,8 @@ public class CommentServlet extends HttpServlet {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
+
+		request.setAttribute("list", list);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);
