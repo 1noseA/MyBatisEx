@@ -55,10 +55,16 @@ public class CommentServlet extends HttpServlet {
 			e1.printStackTrace();
 		}
 
-		// com.setId(id);
-		com.setDate(new Date());
-		com.setName(request.getParameter("name"));
-		com.setContent(request.getParameter("content"));
+		try {
+			int id = dao.findMaxId();
+			com.setId(id + 1);
+			com.setDate(new Date());
+			com.setName(request.getParameter("name"));
+			com.setContent(request.getParameter("content"));
+		} catch (SQLException e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
+		}
 
 		try {
 			dao.insert(com);

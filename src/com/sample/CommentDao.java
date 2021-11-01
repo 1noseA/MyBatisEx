@@ -20,16 +20,12 @@ public class CommentDao {
 
 		Connection con = DriverManager.getConnection(url, user, password);
 
-		PreparedStatement ps = con.prepareStatement("insert into comment values(last_insert_id() + 1, ?, ?, ?)");
-//		ResultSet rs = ps.getGeneratedKeys();
-//		int autoId = 0;
-//		if(rs.next()){
-//            autoId = rs.getInt(1);
-//        }
-		// ps.setInt(1, rs.getInt(autoId));
-		ps.setDate(1, new Date(com.getDate().getTime()));
-		ps.setString(2, com.getName());
-		ps.setString(3, com.getContent());
+		PreparedStatement ps = con.prepareStatement("insert into comment values(?, ?, ?, ?)");
+
+		ps.setInt(1, com.getId());
+		ps.setDate(2, new Date(com.getDate().getTime()));
+		ps.setString(3, com.getName());
+		ps.setString(4, com.getContent());
 
 		ps.execute();
 
@@ -72,6 +68,33 @@ public class CommentDao {
 		}
 
 		return list;
+
+	}
+
+	// SELECT（最終ID取得）
+	public static int findMaxId() throws SQLException {
+
+		String url = "jdbc:mysql://localhost:3306/exercise";
+		String user = "root";
+		String password = "password";
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+
+		Connection con = DriverManager.getConnection(url, user, password);
+
+		PreparedStatement ps = con.prepareStatement("select max(id) from comment");
+		ResultSet rs = ps.executeQuery();
+
+		int id = rs.getInt("id");
+
+		con.close();
+
+		return id;
 
 	}
 
