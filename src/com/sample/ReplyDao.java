@@ -34,7 +34,7 @@ public class ReplyDao {
 	}
 
 	// SELECT（一覧表示）
-	public static List<Reply> findAllReply(int comId) throws SQLException {
+	public static List<Reply> findAllReply() throws SQLException {
 
 		String url = "jdbc:mysql://localhost:3306/exercise";
 		String user = "root";
@@ -42,8 +42,7 @@ public class ReplyDao {
 
 		Connection con = DriverManager.getConnection(url, user, password);
 
-		PreparedStatement ps = con.prepareStatement("select * from reply where com_id = ?");
-		ps.setInt(1, comId);
+		PreparedStatement ps = con.prepareStatement("select * from reply");
 		ResultSet rs = ps.executeQuery();
 
 		List<Reply> reply = new ArrayList<>();
@@ -51,11 +50,11 @@ public class ReplyDao {
 		try {
 			while (rs.next()) {
 				Reply rep = new Reply();
-				rep.setRepId(rs.getInt("repId"));
-				rep.setRepDate(rs.getDate("repDate"));
-				rep.setRepName(rs.getString("repName"));
-				rep.setRepContent(rs.getString("repContent"));
-				rep.setComId(rs.getInt("comId"));
+				rep.setRepId(rs.getInt("rep_id"));
+				rep.setRepDate(rs.getDate("rep_date"));
+				rep.setRepName(rs.getString("rep_name"));
+				rep.setRepContent(rs.getString("rep_content"));
+				rep.setComId(rs.getInt("com_id"));
 				reply.add(rep);
 			}
 		} finally {

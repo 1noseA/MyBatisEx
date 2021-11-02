@@ -48,17 +48,23 @@ public class ExFilter implements Filter {
 	    chain.doFilter(request, response);
 
 	    // コメント全件取得
-	    CommentDao dao = new CommentDao();
-
+	    CommentDao comDao = new CommentDao();
 		List<Comment> list = new ArrayList<>();
+
+		// 返信全件表示
+		ReplyDao repDao = new ReplyDao();
+		List<Reply> reply = new ArrayList<>();
+
 		try {
-			list = dao.findAllComment();
+			list = comDao.findAllComment();
+			reply = repDao.findAllReply();
 		} catch (SQLException e1) {
 			// TODO 自動生成された catch ブロック
 			e1.printStackTrace();
 		}
 
 		request.setAttribute("list", list);
+		request.setAttribute("reply", reply);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);

@@ -48,23 +48,23 @@ public class ReplyServlet extends HttpServlet {
 
 		List<Reply> reply = new ArrayList<>();
 		try {
-			reply = dao.findAllReply(comId);
-			// もしリストがなかったらIDに1を入れる
-			if (reply.size() == 0) {
-				rep.setRepId(1);
-			} else {
-				// リストがあれば、最後のIDを取得する
-				int id = reply.get(reply.size() - 1).getRepId();
-				// +1したIDをセットする
-				rep.setRepId(id + 1);
-			}
-//			int repId = 0;
-//			for (Reply r : reply) {
-//				if (r.getComId() == comId) {
-//					repId++;
-//				}
+			reply = dao.findAllReply();
+//			// もしリストがなかったらIDに1を入れる
+//			if (reply.size() == 0) {
+//				rep.setRepId(1);
+//			} else {
+//				// リストがあれば、最後のIDを取得する
+//				int id = reply.get(reply.size() - 1).getRepId();
+//				// +1したIDをセットする
+//				rep.setRepId(id + 1);
 //			}
-			// rep.setRepId(repId);
+			int repId = 1;
+			for (Reply r : reply) {
+				if (r.getComId() == comId) {
+					repId++;
+				}
+			}
+			rep.setRepId(repId);
 		} catch (SQLException e1) {
 			// TODO 自動生成された catch ブロック
 			e1.printStackTrace();
