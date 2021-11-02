@@ -46,26 +46,34 @@ public class ReplyServlet extends HttpServlet {
 
 		int comId = Integer.parseInt(request.getParameter("comId"));
 
+		List<Reply> reply = new ArrayList<>();
 		try {
-			List<Reply> reply = dao.findAllReply(comId);
-			if (reply == null) {
-				reply = new ArrayList<>();
+			reply = dao.findAllReply(comId);
+			// もしリストがなかったらIDに1を入れる
+			if (reply.size() == 0) {
+				rep.setRepId(1);
+			} else {
+				// リストがあれば、最後のIDを取得する
+				int id = reply.get(reply.size() - 1).getRepId();
+				// +1したIDをセットする
+				rep.setRepId(id + 1);
 			}
-			int repId = 0;
-			for (Reply r : reply) {
-				if (r.getComId() == comId) {
-					repId++;
-				}
-			}
+//			int repId = 0;
+//			for (Reply r : reply) {
+//				if (r.getComId() == comId) {
+//					repId++;
+//				}
+//			}
+			// rep.setRepId(repId);
 		} catch (SQLException e1) {
 			// TODO 自動生成された catch ブロック
 			e1.printStackTrace();
 		}
 
-		rep.setComId(comId);
 		rep.setRepDate(new Date());
 		rep.setRepName(request.getParameter("repName"));
 		rep.setRepContent(request.getParameter("repContent"));
+		rep.setComId(comId);
 
 		try {
 			dao.insert(rep);
@@ -73,6 +81,9 @@ public class ReplyServlet extends HttpServlet {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
+
+		reply.add(rep);
+		request.setAttribute("reply", reply);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);

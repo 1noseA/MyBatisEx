@@ -20,12 +20,12 @@ public class ReplyDao {
 
 		Connection con = DriverManager.getConnection(url, user, password);
 
-		PreparedStatement ps = con.prepareStatement("insert into reply values(?, last_insert_id() + 1, ?, ?, ?)");
-		ps.setInt(1, rep.getComId());
-		// ps.setInt(2, rep.getRepId());
+		PreparedStatement ps = con.prepareStatement("insert into reply values(?, ?, ?, ?, ?)");
+		ps.setInt(1, rep.getRepId());
 		ps.setDate(2, new Date(rep.getRepDate().getTime()));
 		ps.setString(3, rep.getRepName());
 		ps.setString(4, rep.getRepContent());
+		ps.setInt(5, rep.getComId());
 
 		ps.execute();
 
@@ -42,26 +42,27 @@ public class ReplyDao {
 
 		Connection con = DriverManager.getConnection(url, user, password);
 
-		PreparedStatement ps = con.prepareStatement("select * from reply where comId = ?");
+		PreparedStatement ps = con.prepareStatement("select * from reply where com_id = ?");
+		ps.setInt(1, comId);
 		ResultSet rs = ps.executeQuery();
 
-		List<Reply> list = new ArrayList<>();
+		List<Reply> reply = new ArrayList<>();
 
 		try {
 			while (rs.next()) {
 				Reply rep = new Reply();
-				rep.setComId(rs.getInt("comId"));
 				rep.setRepId(rs.getInt("repId"));
 				rep.setRepDate(rs.getDate("repDate"));
 				rep.setRepName(rs.getString("repName"));
 				rep.setRepContent(rs.getString("repContent"));
-				list.add(rep);
+				rep.setComId(rs.getInt("comId"));
+				reply.add(rep);
 			}
 		} finally {
 			con.close();
 		}
 
-		return list;
+		return reply;
 
 	}
 

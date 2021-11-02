@@ -46,7 +46,7 @@ public class CommentServlet extends HttpServlet {
 		List<Comment> list = new ArrayList<>();
 		try {
 			list = dao.findAllComment();
-			// もしリストがなかったらリストをnewしてIDに1を入れる
+			// もしリストがなかったらIDに1を入れる
 			if (list.size() == 0) {
 				com.setId(1);
 			} else {
