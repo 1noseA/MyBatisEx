@@ -41,23 +41,14 @@ public class ReplyServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		ReplyDao dao = new ReplyDao();
+		ReplyDao repDao = new ReplyDao();
 		Reply rep = new Reply();
 
 		int comId = Integer.parseInt(request.getParameter("comId"));
 
 		List<Reply> reply = new ArrayList<>();
 		try {
-			reply = dao.findAllReply();
-//			// もしリストがなかったらIDに1を入れる
-//			if (reply.size() == 0) {
-//				rep.setRepId(1);
-//			} else {
-//				// リストがあれば、最後のIDを取得する
-//				int id = reply.get(reply.size() - 1).getRepId();
-//				// +1したIDをセットする
-//				rep.setRepId(id + 1);
-//			}
+			reply = repDao.findAllReply();
 			int repId = 1;
 			for (Reply r : reply) {
 				if (r.getComId() == comId) {
@@ -76,7 +67,7 @@ public class ReplyServlet extends HttpServlet {
 		rep.setComId(comId);
 
 		try {
-			dao.insert(rep);
+			repDao.insert(rep);
 		} catch (SQLException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -84,6 +75,17 @@ public class ReplyServlet extends HttpServlet {
 
 		reply.add(rep);
 		request.setAttribute("reply", reply);
+
+		// コメント一覧も取得しないと表示できない
+		CommentDao comDao = new CommentDao();
+		List<Comment> list = new ArrayList<>();
+		try {
+			list = comDao.findAllComment();
+		} catch (SQLException e1) {
+			// TODO 自動生成された catch ブロック
+			e1.printStackTrace();
+		}
+		request.setAttribute("list", list);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);

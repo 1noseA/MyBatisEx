@@ -40,12 +40,12 @@ public class CommentServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		CommentDao dao = new CommentDao();
+		CommentDao comDao = new CommentDao();
 		Comment com = new Comment();
 
 		List<Comment> list = new ArrayList<>();
 		try {
-			list = dao.findAllComment();
+			list = comDao.findAllComment();
 			// もしリストがなかったらIDに1を入れる
 			if (list.size() == 0) {
 				com.setId(1);
@@ -65,7 +65,7 @@ public class CommentServlet extends HttpServlet {
 		com.setContent(request.getParameter("content"));
 
 		try {
-			dao.insert(com);
+			comDao.insert(com);
 		} catch (SQLException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
