@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sample.dao.Comment;
+import com.sample.dao.CommentDao;
+import com.sample.dao.Reply;
+import com.sample.dao.ReplyDao;
+
 /**
  * Servlet implementation class ReplyServlet
  */

@@ -14,6 +14,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+import com.sample.dao.Comment;
+import com.sample.dao.CommentDao;
+import com.sample.dao.Reply;
+import com.sample.dao.ReplyDao;
+
 /**
  * Servlet Filter implementation class WorkFilter
  */
