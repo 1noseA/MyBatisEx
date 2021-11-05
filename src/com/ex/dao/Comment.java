@@ -1,4 +1,4 @@
-package com.sample.dao;
+package com.ex.dao;
 
 import java.util.Date;
 

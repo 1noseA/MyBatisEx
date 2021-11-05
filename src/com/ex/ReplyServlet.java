@@ -1,8 +1,7 @@
-package com.sample;
+package com.ex;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -13,10 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sample.dao.Comment;
-import com.sample.dao.CommentDao;
-import com.sample.dao.Reply;
-import com.sample.dao.ReplyDao;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import com.ex.dao.Comment;
+import com.ex.dao.CommentDao;
+import com.ex.dao.Reply;
+import com.ex.dao.ReplyDao;
 
 /**
  * Servlet implementation class ReplyServlet
@@ -46,50 +50,38 @@ public class ReplyServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		ReplyDao repDao = new ReplyDao();
+		String resource = "config.xml";
+		InputStream inputStream = Resources.getResourceAsStream(resource);
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+		SqlSession session = sqlSessionFactory.openSession();
+
+		ReplyDao repDao = session.getMapper(ReplyDao.class);
 		Reply rep = new Reply();
 
 		int comId = Integer.parseInt(request.getParameter("comId"));
 
-		List<Reply> reply = new ArrayList<>();
-		try {
-			reply = repDao.findAllReply();
-			int repId = 1;
-			for (Reply r : reply) {
-				if (r.getComId() == comId) {
-					repId++;
-				}
+		List<Reply> reply = repDao.findAllReply();
+		int repId = 1;
+		for (Reply r : reply) {
+			if (r.getComId() == comId) {
+				repId++;
 			}
-			rep.setRepId(repId);
-		} catch (SQLException e1) {
-			// TODO 自動生成された catch ブロック
-			e1.printStackTrace();
 		}
-
+		rep.setRepId(repId);
 		rep.setRepDate(new Date());
 		rep.setRepName(request.getParameter("repName"));
 		rep.setRepContent(request.getParameter("repContent"));
 		rep.setComId(comId);
 
-		try {
-			repDao.insert(rep);
-		} catch (SQLException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
+		repDao.insert(rep);
 
 		reply.add(rep);
 		request.setAttribute("reply", reply);
 
 		// コメント一覧も取得しないと表示できない
-		CommentDao comDao = new CommentDao();
-		List<Comment> list = new ArrayList<>();
-		try {
-			list = comDao.findAllComment();
-		} catch (SQLException e1) {
-			// TODO 自動生成された catch ブロック
-			e1.printStackTrace();
-		}
+		CommentDao comDao = session.getMapper(CommentDao.class);
+		List<Comment> list = comDao.findAllComment();
 		request.setAttribute("list", list);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");

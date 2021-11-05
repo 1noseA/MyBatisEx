@@ -1,7 +1,7 @@
-package com.sample;
+package com.ex;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sample.dao.Comment;
-import com.sample.dao.CommentDao;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import com.ex.dao.Comment;
+import com.ex.dao.CommentDao;
 
 /**
  * Servlet implementation class PostServlet
@@ -43,36 +48,25 @@ public class CommentServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		CommentDao comDao = new CommentDao();
+		String resource = "config.xml";
+		InputStream inputStream = Resources.getResourceAsStream(resource);
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+		SqlSession session = sqlSessionFactory.openSession();
+
+		CommentDao comDao = session.getMapper(CommentDao.class);
 		Comment com = new Comment();
 
-		List<Comment> list = new ArrayList<>();
-		try {
-			list = comDao.findAllComment();
-			// もしリストがなかったらIDに1を入れる
-			if (list.size() == 0) {
-				com.setId(1);
-			} else {
-				// リストがあれば、最後のIDを取得する
-				int id = list.get(list.size() - 1).getId();
-				// +1したIDをセットする
-				com.setId(id + 1);
-			}
-		} catch (SQLException e1) {
-			// TODO 自動生成された catch ブロック
-			e1.printStackTrace();
+		List<Comment> list = comDao.findAllComment();
+		if (list.size() == 0 || list == null) {
+			list = new ArrayList<>();
+			// com.setId(1);
 		}
-
 		com.setDate(new Date());
 		com.setName(request.getParameter("name"));
 		com.setContent(request.getParameter("content"));
 
-		try {
-			comDao.insert(com);
-		} catch (SQLException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
+		comDao.insert(com);
 
 		list.add(com);
 		request.setAttribute("list", list);

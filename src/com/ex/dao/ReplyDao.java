@@ -1,4 +1,4 @@
-package com.sample.dao;
+package com.ex.dao;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 public interface ReplyDao {
 
-	@Insert("insert into comment values (#{repId}, #{repDate}, #{repName}, #{repContent}, #{comId})")
+	@Insert("insert into reply values (#{repId}, #{repDate}, #{repName}, #{repContent}, #{comId})")
 	public void insert(Reply reply);
 
 	@ResultMap("replyResult")

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sample.dao.ReplyDao">
+<mapper namespace="com.ex.dao.ReplyDao">
 
-	<resultMap type="com.sample.dao.Reply" id="replyResult">
+	<resultMap type="com.ex.dao.Reply" id="replyResult">
 		<result column="rep_id" property="repId"/>
 		<result column="rep_date" property="repDate"/>
 		<result column="rep_name" property="repName"/>
