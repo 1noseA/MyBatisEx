@@ -84,6 +84,9 @@ public class ReplyServlet extends HttpServlet {
 		List<Comment> list = comDao.findAllComment();
 		request.setAttribute("list", list);
 
+		session.commit();
+		session.close();
+
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);
 		return;

@@ -2,7 +2,6 @@ package com.ex;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,19 +56,19 @@ public class CommentServlet extends HttpServlet {
 		CommentDao comDao = session.getMapper(CommentDao.class);
 		Comment com = new Comment();
 
-		List<Comment> list = comDao.findAllComment();
-		if (list.size() == 0 || list == null) {
-			list = new ArrayList<>();
-			// com.setId(1);
-		}
 		com.setDate(new Date());
 		com.setName(request.getParameter("name"));
 		com.setContent(request.getParameter("content"));
 
 		comDao.insert(com);
 
-		list.add(com);
+		// オートインクリメントのIDを取得するためにINSERTした後で全件取得する
+		List<Comment> list = comDao.findAllComment();
 		request.setAttribute("list", list);
+
+		// これが必要
+		session.commit();
+		session.close();
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);
