@@ -19,6 +19,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.ex.dao.Comment;
 import com.ex.dao.CommentDao;
+import com.ex.dao.Reply;
+import com.ex.dao.ReplyDao;
 
 /**
  * Servlet implementation class PostServlet
@@ -66,7 +68,11 @@ public class CommentServlet extends HttpServlet {
 		List<Comment> list = comDao.findAllComment();
 		request.setAttribute("list", list);
 
-		// これが必要
+		// 返信全件表示（リダイレクト後の表示に必要）
+		ReplyDao repDao = session.getMapper(ReplyDao.class);
+		List<Reply> reply = repDao.findAllReply();
+		request.setAttribute("reply", reply);
+
 		session.commit();
 		session.close();
 

@@ -26,7 +26,10 @@ import com.ex.dao.ReplyDao;
 /**
  * Servlet Filter implementation class WorkFilter
  */
-@WebFilter("/*")
+// css効かなかった原因は@WebFilter("/*")と書いていたから（前はできてたのに）
+// @WebFilter(urlPatterns={"URLパターン", "URLパターン"})こうすれば複数選択できるが
+// やっぱり/commentは通らないのでCommentServletにreplyも取得する必要あり
+@WebFilter("/comment.jsp")
 public class ExFilter implements Filter {
 
     /**
@@ -67,6 +70,9 @@ public class ExFilter implements Filter {
 
 		request.setAttribute("list", list);
 		request.setAttribute("reply", reply);
+
+		session.commit();
+		session.close();
 
 		RequestDispatcher rd = request.getRequestDispatcher("/comment.jsp");
 		rd.forward(request, response);
